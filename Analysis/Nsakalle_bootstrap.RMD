@@ -1,0 +1,65 @@
+
+This is to illustrate central limit theorem in rmarkdown using bootstrap. This is to perform using to random sample and 2 expoenetial sample and produce histogram for both original sample and bootstram sample to illustrate central limit theorem and also to upload the rmarkdown file to Github.
+
+Central Limit Theorem (CLT) Say we take a SRS of size from any population with mean and standard deviation .
+If is large enough, the sampling distribution of the sample mean is approximately normal with mean and standard deviation.
+
+I am taking 2 sample normal randon sample of size 10 and 20 and exponential sample of size 10 and 20.
+
+```{r BootStrap_exec}
+##Two rnorm samples of differing sample sizes
+smpl1 <- rnorm(10,0,10)  #first sample of size 10.
+smpl2 <- rnorm(20,0,10)  #second sample of size 20.
+
+##Two rexp samples of differing sample sizes
+expnsmpl1 <- rexp(10)  #small sample size
+expnsmpl2 <- rexp(20) #large sample size
+
+##vector to hold the 1000 samples.
+
+r <-1000
+bootmeansmpl1 <- numeric(r)
+bootmeansmpl2 <- numeric(r)
+bootmeanexpn1 <- numeric(r)
+bootmeanexpn2 <- numeric(r) 
+
+##this is bootstrap for loop to thsat run 1000 sample for above define vectors.
+# and to define means of 1000 samples of our original dataset.
+
+for (i in 1:r) {
+  bootsmpl1 <- sample(smpl1, size = length(smpl1), replace =T )
+  bootsmpl2 <- sample(smpl2, size = length(smpl2), replace =T )
+  bootexpn2 <- sample(expnsmpl2, size = length(expnsmpl2), replace =T )
+  bootexpn1 <- sample(expnsmpl1, size = length(expnsmpl1), replace =T )
+  bootmeansmpl1[i] <- mean(bootsmpl1)
+  bootmeansmpl2[i] <- mean(bootsmpl2)
+  bootmeanexpn1[i] <- mean(bootexpn1)
+  bootmeanexpn2[i] <- mean(bootexpn2)
+}
+
+```
+
+Now here we have produce histogram of original random normal sample of 10 and 20 samples. and boostrap sample for the mean of 1000 samples.
+
+```{r rnormHist, echo = FALSE}
+  par(mfrow=c(2,2))
+  hist(smpl1, main = "Histogram of original sample")
+  hist(bootmeansmpl1, main = "Histogram of boorstrap sample")
+ 
+  hist(smpl2, main = "Histogram of original sample")
+  hist(bootmeansmpl2, main = "Histogram of boorstrap sample")
+```
+
+Its very clear from the histogram that size of the histogram is sqewed but when we have increase the size of sample using bootstram the data becomes normally distributed.
+
+```{r rexpHist, echo = FALSE}
+par(mfrow=c(2,2))
+  hist(expnsmpl1 , main = "Histogram of original exponential sample")
+  hist(bootmeanexpn1, main = "Histogram of boorstrap exponential sample") 
+
+  hist(expnsmpl2 , main = "Histogram of original exponential sample")
+  hist(bootmeanexpn2, main = "Histogram of boorstrap exponential sample") 
+```
+
+You see clearly that the original dataset is skewed, but when randomly samples through a bootstrap mechanisms - the distribution of averages becomes normally distributed.
+
